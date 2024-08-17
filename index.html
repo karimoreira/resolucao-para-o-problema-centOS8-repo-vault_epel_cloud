@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolução para o problema no repositório Baseos CentOS 8</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Como resolver o problema de download dos metadados para o repositório Baseos no CentOS 8 Linux, que foi descontinuado?</h1>
+        
+        <h2>Configurando o repositório “vault.epel.cloud” no CentOS 8:</h2>
+        
+        <ol>
+            <li>Instale o pacote epel-release, que adiciona o repositório EPEL à lista de repositórios, permitindo a instalação de pacotes adicionais não disponíveis nos repositórios padrão:</li>
+            <pre><code>sudo yum install epel-release</code></pre>
+            
+            <li>Comente as linhas contendo <code>mirrorlist</code> nos arquivos de configuração dos repositórios do CentOS:</li>
+            <pre><code>sudo sed -i ‘s/mirrorlist/#mirrorlist/g’ /etc/yum.repos.d/CentOS-*</code></pre>
+            
+            <li>Descomente as linhas que definem <code>baseurl</code> e defina o URL do repositório para <code>vault.centos.org</code>:</li>
+            <pre><code>sudo sed -i ‘s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*</code></pre>
+            
+            <li>Substitua o URL <code>baseurl</code> antigo pelo novo URL <code>vault.centos.org</code>:</li>
+            <pre><code>sudo sed -i ‘s|baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*</code></pre>
+            
+            <li>Comente as linhas contendo <code>mirrorlist</code> nos arquivos de configuração dos repositórios CentOS-Linux e descomente as linhas que definem <code>baseurl</code> e defina o URL do repositório para <code>vault.epel.cloud</code>:</li>
+            <pre><code>sudo sed -i ‘s/mirrorlist/#mirrorlist/g’ /etc/yum.repos.d/*.repo
+sudo sed -i ‘s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/*.repo</code></pre>
+            
+            <li>Substitua o URL <code>baseurl</code> antigo pelo novo URL <code>vault.epel.cloud</code>:</li>
+            <pre><code>sudo sed -i ‘s|baseurl=http://mirror.centos.org|baseurl=http://vault.epel.cloud|g' /etc/yum.repos.d/*.repo</code></pre>
+            
+            <li>Atualize todos os pacotes instalados no sistema:</li>
+            <pre><code>sudo yum update -y</code></pre>
+            
+            <li>Liste os arquivos de configuração dos repositórios no diretório <code>/etc/yum.repos.d/</code>:</li>
+            <pre><code>ls /etc/yum.repos.d/</code></pre>
+            
+            <li>Substitua todas as ocorrências de <code>mirror.centos.org</code> por <code>vault.epel.cloud</code> em todos os arquivos <code>.repo</code>:</li>
+            <pre><code>sudo sed -i ‘s|mirror.centos.org|vault.epel.cloud|g’ /etc/yum.repos.d/*.repo</code></pre>
+            
+            <li>Atualize todos os pacotes e permita a remoção de pacotes conflitantes, se necessário:</li>
+            <pre><code>sudo yum update -y — allowerasing</code></pre>
+        </ol>
+    </div>
+</body>
+</html>
